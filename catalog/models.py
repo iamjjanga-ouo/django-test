@@ -1,5 +1,9 @@
 from django.db import models
 from django.urls import reverse  # To generate URLS by reversing URL patterns
+from django.contrib.auth.models import User  # Required to assign User as a borrower
+import uuid  # Required for unique book instances
+from datetime import date
+
 
 class Genre(models.Model):
     name = models.CharField(
@@ -38,8 +42,6 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
-import uuid  # Required for unique book instances
-from datetime import date
 
 class BookInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4,
@@ -93,9 +95,9 @@ class Author(models.Model):
         return '{0}, {1}'.format(self.last_name, self.first_name)
 
 
-from django.contrib.auth.models import User  # Required to assign User as a borrower
 
 # User Section
+"""
 user01 = User.objects.create_user('user01','user01@abc.com', 'dkagh1.')
 user01.first_name = 'user'
 user01.last_name = '01'
@@ -105,3 +107,4 @@ user02 = User.objects.create_user('user02', 'user02@abc.com', 'dkagh1.')
 user02.first_name = 'user'
 user02.last_name = '02'
 user02.save()
+"""
