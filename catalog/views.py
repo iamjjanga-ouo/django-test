@@ -60,23 +60,27 @@ class LoanedBooksAllListView(PermissionRequiredMixin, generic.ListView):
         return BookInstance.objects.filter(status__exact='o').order_by('due_back')
 
 
-from catalog.forms import RenewBookModelForm
+from catalog.forms import RenewBookForm
+#from catalog.forms import RenewBookModelForm
 
 @permission_required('catalog.can_mark_returned')
 def renew_book_librarian(request, pk):
     book_instance = get_object_or_404(BookInstance, pk=pk)
 
     if request.method == 'POST':
-        form = RenewBookModelForm(request.POST)
+        form = RenewBookForm(request.POST)
+#        form = RenewBookModelForm(request.POST)
 
         if form.is_valid():
-            book_instance.due_back = form.cleaned_data['due_back']
+            book_instance.due_back = form.cleaned_data['renewal_date']
+#            book_instance.due_back = form.cleaned_data['due_back']
             book_instance.save()
 
             return HttpResponseRedirect(reverse('all-borrowed'))
     else: # GET request
         proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
-        form = RenewBookModelForm(initial={'due_back': proposed_renewal_date})
+        form = RenewBookForm(initial={'renewal_date': proposed_renewal_date})
+#        form = RenewBookModelForm(initial={'due_back': proposed_renewal_date})
 
     context = {
         'form': form,
